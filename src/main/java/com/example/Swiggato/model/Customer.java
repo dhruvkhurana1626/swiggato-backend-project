@@ -32,5 +32,12 @@ public class Customer {
     @Enumerated(EnumType.STRING)
     Gender gender;
 
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<Caddress> caddresseslist;
+
+    @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<OrderEntity> orderEntities;
 
 }

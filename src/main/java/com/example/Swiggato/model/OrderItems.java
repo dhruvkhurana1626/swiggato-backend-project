@@ -21,4 +21,18 @@ public class OrderItems {
     @Column
     private int quantity;
 
+    @Column
+    private double pricePerUnit;
+
+    @Column
+    private double totalPrice;
+
+    @JoinColumn(name = "orderentity_id")
+    @ManyToOne
+    OrderEntity orderEntity;
+
+    @ManyToOne
+    @JoinColumn(name="menu_item_id")
+    MenuItems menuItems;
+
 }

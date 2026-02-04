@@ -26,14 +26,15 @@ public class MenuItems {
     private String name;
 
     @Column
-    private int price;
+    private double price;
 
     @Column
     boolean isVeg;
 
+    @Column
+    boolean isAvailable;
+
     @Enumerated(EnumType.STRING)
     private FoodCategory foodCategory;
-
-
 
 }

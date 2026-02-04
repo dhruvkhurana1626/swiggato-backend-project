@@ -19,9 +19,9 @@ import java.util.List;
 
 public class OrderEntity {
 
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private String id;
+    private Integer id;
 
     private double totalCost;
 
@@ -31,5 +31,11 @@ public class OrderEntity {
     @Enumerated(EnumType.STRING)
     OrderStatus orderStatus;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    Customer customer;
+
+    @OneToMany(mappedBy = "orderEntity")
+    List<OrderItems> orderItemsList;
 
 }

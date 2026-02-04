@@ -32,5 +32,12 @@ public class Restaurant {
     @CreationTimestamp
     private Date creatingAt;
 
+    @OneToOne
+    @JoinColumn
+    Raddress raddress;
+
+    @ManyToMany
+    @JoinTable
+    List<MenuItems> menuItemsList;
 
 }

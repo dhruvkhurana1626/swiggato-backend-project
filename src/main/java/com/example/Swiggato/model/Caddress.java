@@ -30,5 +30,8 @@ public class Caddress {
     @Column
     private int pincode;
 
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    Customer customer;
 
 }
