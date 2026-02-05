@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
 
 public class Customer {
 
@@ -22,7 +23,7 @@ public class Customer {
     @Column
     private String name;
 
-    @Column
+    @Column(unique = true)
     private String email;
 
     @Column(nullable = false,length = 10)
