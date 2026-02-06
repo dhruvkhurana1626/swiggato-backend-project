@@ -1,11 +1,9 @@
 package com.example.Swiggato.model;
 
+import com.example.Swiggato.utility.enums.RestaurantStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
@@ -16,27 +14,29 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-
+@Builder
 public class Restaurant {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private Integer id;
 
-    @Column
+    @Column(unique = true)
     private String name;
 
     @Column
     boolean isOpen;
 
+    @Enumerated(EnumType.STRING)
+    private RestaurantStatus restaurantStatus;
+
     @CreationTimestamp
     private Date creatingAt;
 
-    @OneToOne
-    @JoinColumn
-    Raddress raddress;
+    @OneToMany(mappedBy = "restaurant")
+    List<Raddress> raddressList;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinTable
     List<MenuItems> menuItemsList;
 

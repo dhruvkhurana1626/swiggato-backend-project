@@ -1,21 +1,15 @@
 package com.example.Swiggato.model;
 
 import com.example.Swiggato.utility.enums.FoodCategory;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-
+@Builder
 public class MenuItems {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

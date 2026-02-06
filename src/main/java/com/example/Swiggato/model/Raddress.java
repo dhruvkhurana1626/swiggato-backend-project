@@ -19,9 +19,16 @@ public class Raddress {
     private Integer id;
 
     @Column
+    private String branchCode;
+
+    @Column
     private int pincode;
 
     @Column
     private String city;
+
+    @JoinColumn(name = "Restaurant_id")
+    @ManyToOne
+    Restaurant restaurant;
 
 }
