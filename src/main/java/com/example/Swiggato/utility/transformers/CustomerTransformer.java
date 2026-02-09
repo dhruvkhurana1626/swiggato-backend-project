@@ -14,7 +14,7 @@ public class CustomerTransformer {
                 .email(customerRequest.getEmail())
                 .mobNo(customerRequest.getMobNo())
                 .gender(customerRequest.getGender())
-                .caddresseslist(new ArrayList<>())
+                .cadresList(new ArrayList<>())
                 .orderEntities(new ArrayList<>())
                 .build();
 

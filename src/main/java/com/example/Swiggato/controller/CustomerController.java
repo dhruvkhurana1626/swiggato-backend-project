@@ -1,7 +1,10 @@
 package com.example.Swiggato.controller;
 
+import com.example.Swiggato.dto.request.CadresRequest;
 import com.example.Swiggato.dto.request.CustomerRequest;
+import com.example.Swiggato.dto.response.CadresResponse;
 import com.example.Swiggato.dto.response.CustomerResponse;
+import com.example.Swiggato.exceptions.CustomerNotFound;
 import com.example.Swiggato.exceptions.EmailAlreadyUsed;
 import com.example.Swiggato.service.CustomerService;
 import com.example.Swiggato.utility.enums.Gender;

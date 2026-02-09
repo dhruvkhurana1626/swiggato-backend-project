@@ -1,11 +1,17 @@
 package com.example.Swiggato.service;
 
+import com.example.Swiggato.dto.request.CadresRequest;
 import com.example.Swiggato.dto.request.CustomerRequest;
+import com.example.Swiggato.dto.response.CadresResponse;
 import com.example.Swiggato.dto.response.CustomerResponse;
+import com.example.Swiggato.exceptions.CustomerNotFound;
 import com.example.Swiggato.exceptions.EmailAlreadyUsed;
+import com.example.Swiggato.model.Cadres;
 import com.example.Swiggato.model.Customer;
+import com.example.Swiggato.repository.CadresRepository;
 import com.example.Swiggato.repository.CustomerRepository;
 import com.example.Swiggato.utility.enums.Gender;
+import com.example.Swiggato.utility.transformers.CadresTransformer;
 import com.example.Swiggato.utility.transformers.CustomerTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,4 +39,5 @@ public class CustomerService {
         for(Customer c:customerList)customerResponseList.add(CustomerTransformer.customerToCustomerResponse(c));
         return customerResponseList;
     }
+
 }

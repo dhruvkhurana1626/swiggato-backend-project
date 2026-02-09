@@ -35,7 +35,7 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
     @JsonIgnore
-    List<Caddress> caddresseslist;
+    List<Cadres> cadresList;
 
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL)
     @JsonIgnore
