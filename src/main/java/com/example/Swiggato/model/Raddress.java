@@ -1,17 +1,14 @@
 package com.example.Swiggato.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
-
+@Builder
 public class Raddress {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +19,9 @@ public class Raddress {
     private String branchCode;
 
     @Column
-    private int pincode;
+    private String pincode;
 
     @Column
     private String city;
-
-    @JoinColumn(name = "Restaurant_id")
-    @ManyToOne
-    Restaurant restaurant;
 
 }

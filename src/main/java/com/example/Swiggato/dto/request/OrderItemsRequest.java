@@ -9,7 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RestaurantRequest {
-    private String name;
-    private String email;
+
+public class OrderItemsRequest {
+    int quantity;
+    int menuItemId;
 }

@@ -16,15 +16,18 @@ public class CadresController {
 
     private final CadresService cadresService;
 
-    @PostMapping
-    public ResponseEntity addCadresToCustomer(@RequestParam int customerId,
-                                              @RequestBody CadresRequest cadresRequest){
+    @PostMapping("/customers/{customerId}/cadres")
+    public ResponseEntity addCadresToCustomer(
+            @PathVariable int customerId,
+            @RequestBody CadresRequest cadresRequest) {
+
         try {
-            CadresResponse cadresResponse = cadresService.addCadresToCustomer(customerId, cadresRequest);
-            return new ResponseEntity(cadresResponse, HttpStatus.OK);
-        } catch (CustomerNotFound e) {
+            CadresResponse cadresResponse =
+                    cadresService.addCadresToCustomer(customerId, cadresRequest);
+            return new ResponseEntity(cadresResponse,HttpStatus.CREATED);
+        } catch (RuntimeException e) {
             return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
-
     }
+
 }

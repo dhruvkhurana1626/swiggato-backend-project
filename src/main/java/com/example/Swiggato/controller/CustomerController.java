@@ -6,6 +6,7 @@ import com.example.Swiggato.dto.response.CadresResponse;
 import com.example.Swiggato.dto.response.CustomerResponse;
 import com.example.Swiggato.exceptions.CustomerNotFound;
 import com.example.Swiggato.exceptions.EmailAlreadyUsed;
+import com.example.Swiggato.exceptions.PhoneAlreadyUsed;
 import com.example.Swiggato.service.CustomerService;
 import com.example.Swiggato.utility.enums.Gender;
 import lombok.RequiredArgsConstructor;
@@ -22,20 +23,35 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    /**
+     * Create a new customer
+     */
     @PostMapping
-    public ResponseEntity addCustomer(@RequestBody CustomerRequest customerRequest){
-        try{
-            CustomerResponse customerResponse = customerService.addCustomer(customerRequest);
-            return new ResponseEntity(customerResponse, HttpStatus.OK);
-        } catch (EmailAlreadyUsed e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
+    public ResponseEntity addCustomer(
+            @RequestBody CustomerRequest customerRequest) {
+
+        try {
+            CustomerResponse customerResponse =
+                    customerService.addCustomer(customerRequest);
+            return new ResponseEntity(customerResponse,HttpStatus.CREATED);
+        }
+
+        catch (RuntimeException e) {
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
+    /**
+     * Fetch customers by gender
+     */
     @GetMapping
-    public ResponseEntity getCustomerByGender(@RequestParam Gender gender){
-        List<CustomerResponse> customerResponseList = customerService.getCustomerByGender(gender);
-        return new ResponseEntity(customerResponseList,HttpStatus.OK);
+    public ResponseEntity<List<CustomerResponse>> getCustomersByGender(
+            @RequestParam Gender gender) {
+
+        List<CustomerResponse> customers =
+                customerService.getCustomerByGender(gender);
+
+        return ResponseEntity.ok(customers);
     }
 
 }

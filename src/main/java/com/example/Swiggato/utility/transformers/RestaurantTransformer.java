@@ -12,6 +12,7 @@ public class RestaurantTransformer {
     public static Restaurant restaurantRequestToRestaurant(RestaurantRequest restaurantRequest){
         Restaurant restaurant = Restaurant.builder()
                 .name(restaurantRequest.getName())
+                .email(restaurantRequest.getEmail())
                 .restaurantStatus(RestaurantStatus.DRAFT)
                 .raddressList(new ArrayList<>())
                 .menuItemsList(new ArrayList<>())

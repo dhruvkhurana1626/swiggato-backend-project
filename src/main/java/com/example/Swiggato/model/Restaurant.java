@@ -24,6 +24,9 @@ public class Restaurant {
     @Column(unique = true)
     private String name;
 
+    @Column(unique = true)
+    private String email;
+
     @Column
     boolean isOpen;
 
@@ -33,7 +36,8 @@ public class Restaurant {
     @CreationTimestamp
     private Date creatingAt;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @JoinColumn(name="Restaurant_Id")
     List<Raddress> raddressList;
 
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})

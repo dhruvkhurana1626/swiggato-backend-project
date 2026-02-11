@@ -1,17 +1,12 @@
 package com.example.Swiggato.service;
 
-import com.example.Swiggato.dto.request.CadresRequest;
 import com.example.Swiggato.dto.request.CustomerRequest;
-import com.example.Swiggato.dto.response.CadresResponse;
 import com.example.Swiggato.dto.response.CustomerResponse;
-import com.example.Swiggato.exceptions.CustomerNotFound;
-import com.example.Swiggato.exceptions.EmailAlreadyUsed;
-import com.example.Swiggato.model.Cadres;
 import com.example.Swiggato.model.Customer;
-import com.example.Swiggato.repository.CadresRepository;
 import com.example.Swiggato.repository.CustomerRepository;
+import com.example.Swiggato.utility.Functions.Email;
+import com.example.Swiggato.utility.Functions.Validation;
 import com.example.Swiggato.utility.enums.Gender;
-import com.example.Swiggato.utility.transformers.CadresTransformer;
 import com.example.Swiggato.utility.transformers.CustomerTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,20 +19,46 @@ import java.util.List;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final Validation validation;
+    private final Email email;
 
     public CustomerResponse addCustomer(CustomerRequest customerRequest) {
-        if(customerRepository.existsByEmail(customerRequest.getEmail())) {
-            throw new EmailAlreadyUsed("Email Already Used");
-        }
-        Customer savedCustomer = customerRepository.save(CustomerTransformer.cutsomerRequestToCustomer(customerRequest));
-        return CustomerTransformer.customerToCustomerResponse(savedCustomer);
+
+        // Validate request data (null checks, email uniqueness, mandatory fields)
+        // Keeps service logic clean and reusable
+        validation.validateNewCustomer(customerRequest);
+
+        // Convert DTO → Entity before persistence
+        Customer customer =
+                CustomerTransformer.cutsomerRequestToCustomer(customerRequest);
+
+        // Persist customer in database
+        Customer savedCustomer = customerRepository.save(customer);
+
+        // Convert saved entity → response DTO
+        CustomerResponse customerResponse = CustomerTransformer.customerToCustomerResponse(savedCustomer);
+
+        // Sending the Confirmation Email - Once the Customer is Added
+        email.sendEmailForCustomerRegistration(customerResponse);
+
+        // Returing the Customer Response DTO
+        return customerResponse;
     }
 
     public List<CustomerResponse> getCustomerByGender(Gender gender) {
-        List<Customer> customerList = customerRepository.findByGender(gender);
-        List<CustomerResponse> customerResponseList = new ArrayList<>();
-        for(Customer c:customerList)customerResponseList.add(CustomerTransformer.customerToCustomerResponse(c));
-        return customerResponseList;
+
+        // Defensive check to avoid invalid queries and NPEs
+        if (gender == null) {
+            throw new IllegalArgumentException("Gender must not be null");
+        }
+
+        // Fetch customers by gender, convert entities to response DTOs
+        return customerRepository.findByGender(gender)
+                .stream()
+                .map(CustomerTransformer::customerToCustomerResponse)
+                .toList();
     }
+
+
 
 }

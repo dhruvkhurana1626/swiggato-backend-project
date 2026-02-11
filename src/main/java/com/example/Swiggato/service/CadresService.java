@@ -7,6 +7,7 @@ import com.example.Swiggato.model.Cadres;
 import com.example.Swiggato.model.Customer;
 import com.example.Swiggato.repository.CadresRepository;
 import com.example.Swiggato.repository.CustomerRepository;
+import com.example.Swiggato.utility.Functions.Validation;
 import com.example.Swiggato.utility.transformers.CadresTransformer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,22 +19,27 @@ public class CadresService {
 
     private final CadresRepository cadresRepository;
     private final CustomerRepository customerRepository;
+    private final Validation validation;
 
-    public CadresResponse addCadresToCustomer(int customerId, CadresRequest cadresRequest) {
+    public CadresResponse addCadresToCustomer(int customerId,
+                                              CadresRequest cadresRequest) {
 
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(()->new CustomerNotFound("Invalid Customer Id"));
+        // Validate customer existence (throws exception if not found)
+        Customer customer = validation.checkIfCustomerExist(customerId);
 
+        // Convert request DTO → Cadres entity
         Cadres cadres = CadresTransformer.cadresRequestToCadres(cadresRequest);
 
-        //relationship
-        customer.getCadresList().add(cadres);
+        // Establish bidirectional relationship
         cadres.setCustomer(customer);
+        customer.getCadresList().add(cadres);
 
-        //save
+        // Persist via owning aggregate (Customer)
+        // Cascade should handle Cadres persistence
         customerRepository.save(customer);
 
-        int size = customer.getCadresList().size();
-        return CadresTransformer.cadresToCadresResponse(customer.getCadresList().get(size-1));
+        // Return response for the newly added Cadres
+        return CadresTransformer.cadresToCadresResponse(cadres);
     }
+
 }

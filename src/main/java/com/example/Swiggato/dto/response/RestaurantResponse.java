@@ -16,5 +16,4 @@ public class RestaurantResponse {
     private String name;
     private Date creatingAt;
     private RestaurantStatus restaurantStatus;
-    private List<MenuItems> menuItems;
 }

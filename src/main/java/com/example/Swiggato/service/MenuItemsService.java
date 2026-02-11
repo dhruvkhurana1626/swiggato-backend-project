@@ -8,6 +8,7 @@ import com.example.Swiggato.model.MenuItems;
 import com.example.Swiggato.model.Restaurant;
 import com.example.Swiggato.repository.MenuItemsRepository;
 import com.example.Swiggato.repository.RestaurantRepository;
+import com.example.Swiggato.utility.Functions.Validation;
 import com.example.Swiggato.utility.enums.RestaurantStatus;
 import com.example.Swiggato.utility.transformers.MenuItemsTransformer;
 import lombok.RequiredArgsConstructor;
@@ -21,21 +22,30 @@ public class MenuItemsService {
 
     private final RestaurantRepository restaurantRepository;
     private final MenuItemsRepository menuItemsRepository;
+    private final Validation validation;
 
-    public MenuItemsResponse addMenuItem(int restaurantid, MenuItemsRequest menuItemsRequest) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantid).
-                orElseThrow(() -> new RestaurantNotFound("Restaurant with ID " + restaurantid + " is not Available"));
+    public MenuItemsResponse addMenuItem(int restaurantId,
+                                         MenuItemsRequest menuItemsRequest) {
 
-        if(restaurant.getRestaurantStatus()!=RestaurantStatus.ACTIVE){
-            throw new RestaurantNotActive("Restaurant not actice till now, Please fix that issue before trying to add a Item");
-        }
+        // Validate restaurant existence
+        Restaurant restaurant =
+                validation.checkIfRestaurtantExist(restaurantId);
 
-        MenuItems menuItems = MenuItemsTransformer.menuItemsRequestToMenuItems(menuItemsRequest);
-        restaurant.getMenuItemsList().add(menuItems);
+        // Ensure restaurant is allowed to accept menu updates
+        validation.checkIfRestaurantIsActive(restaurant.getRestaurantStatus());
 
+        // Convert request DTO → MenuItem entity
+        MenuItems menuItem =
+                MenuItemsTransformer.menuItemsRequestToMenuItems(menuItemsRequest);
+
+        // Establish relationship (owning side handled by Restaurant)
+        restaurant.getMenuItemsList().add(menuItem);
+
+        // Persist via aggregate root
         restaurantRepository.save(restaurant);
 
-        int size = restaurant.getMenuItemsList().size()-1;
-        return MenuItemsTransformer.menuItemToMenuItemsResponse(restaurant.getMenuItemsList().get(size));
+        // Return response for the newly added menu item
+        return MenuItemsTransformer.menuItemToMenuItemsResponse(menuItem);
     }
+
 }

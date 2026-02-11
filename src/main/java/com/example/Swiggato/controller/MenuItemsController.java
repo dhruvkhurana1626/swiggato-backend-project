@@ -20,18 +20,18 @@ public class MenuItemsController {
 
     private final MenuItemsService menuItemsService;
 
-    @PostMapping
-    public ResponseEntity addMenuItem(@RequestBody MenuItemsRequest menuItemsRequest,
-                                      @RequestParam int restaurantid){
-        try{
-            MenuItemsResponse menuItemsResponse = menuItemsService.addMenuItem(restaurantid,menuItemsRequest);
-            return new ResponseEntity(menuItemsResponse, HttpStatus.OK);
-        }
-        catch (RestaurantNotFound e){
-            return new ResponseEntity(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
-        catch (RestaurantNotActive e){
-            return new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);
+    @PostMapping("/restaurants/{restaurantId}/menu-items")
+    public ResponseEntity addMenuItem(
+            @PathVariable int restaurantId,
+            @RequestBody MenuItemsRequest menuItemsRequest) {
+
+        try {
+            MenuItemsResponse response =
+                    menuItemsService.addMenuItem(restaurantId, menuItemsRequest);
+            return new ResponseEntity<>(response,HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
+
 }

@@ -23,10 +23,10 @@ public class Customer {
     @Column
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String email;
 
-    @Column(nullable = false,length = 10)
+    @Column(unique = true, nullable = false,length = 10)
     private String mobNo;
 
     @Column
